@@ -1,0 +1,34 @@
+{
+    "author": "antluisroman@gmail.com",
+    "dependencies": {
+        "xml2json": "^0.10.0"
+    },
+    "keywords": [],
+    "name": "sevibus",
+    "pebble": {
+        "capabilities": [
+            "location"
+        ],
+        "displayName": "SeviBus",
+        "enableMultiJS": true,
+        "messageKeys": [
+            "LATITUDE",
+            "LONGITUDE"
+        ],
+        "projectType": "native",
+        "resources": {
+            "media": []
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "aplite",
+            "basalt",
+            "chalk"
+        ],
+        "uuid": "6173da06-7396-495f-b283-a46b6bd3edbd",
+        "watchapp": {
+            "watchface": false
+        }
+    },
+    "version": "1.0.0"
+}
