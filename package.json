@@ -1,7 +1,6 @@
 {
     "author": "antluisroman@gmail.com",
     "dependencies": {
-        "xml2json": "^0.10.0"
     },
     "keywords": [],
     "name": "sevibus",
