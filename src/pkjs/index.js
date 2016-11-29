@@ -4,6 +4,7 @@ Pebble.addEventListener('ready',
   function(e) {
     console.log('PebbleKit JS ready!');
     console.log('Call to getNodosCercanos');
-    tussamApi.getNodosCercanos();
+    //tussamApi.getNodosCercanos();
+    tussamApi.getTiempoNodo(18);
   }
 );

@@ -1,4 +1,6 @@
 var X2JS = require('./libs/xml2json');
+var TUSSAM_URL = 'http://www.infobustussam.com:9005/InfoTusWS/services/InfoTus?WSDL';
+var x2js = new X2JS();
 
 function getNodosCercanos() {
   function success(pos) {
@@ -6,25 +8,17 @@ function getNodosCercanos() {
     var soapBody = '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" targetNamespace="http://impl.services.infotusws.tussam.com/" xmlns:ns1="http://services.infotusws.tussam.com/" xmlns:ns2="http://schemas.xmlsoap.org/soap/http"><soap:Body><getNodosCercanos xmlns="http://services.infotusws.tussam.com/"><latitud xmlns="">'+pos.coords.latitude+'</latitud><longitud xmlns="">'+pos.coords.longitude+'</longitud><radio xmlns="">1000</radio></getNodosCercanos></soap:Body></soap:Envelope>';
 
     var method = 'POST';
-    var url = 'http://www.infobustussam.com:9005/InfoTusWS/services/InfoTus?WSDL';
-
     // Create the request
     var req = new XMLHttpRequest();
-    req.open(method, url,true);
+    req.open(method, TUSSAM_URL, true);
+
     req.setRequestHeader("Authorization", "Basic aW5mb3R1cy11c2VybW9iaWxlOjJpbmZvdHVzMHVzZXIxbW9iaWxlMg==");
 	  req.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
     req.setRequestHeader("SOAPAction", "");
     req.setRequestHeader("deviceid", Pebble.getAccountToken());
-
-    // Send the request
     req.send(soapBody);
 
-    // Specify the callback for when the request is completed
     req.onload = function() {
-      // The request was successfully completed!
-      console.log('Got response: ' + this.responseText);
-      console.log("################");
-      var x2js = new X2JS();
       var xmlText = this.responseText;
       var jsonObj = x2js.xml_str2json( xmlText );
       console.log(JSON.stringify(jsonObj));
@@ -2019,7 +2013,6 @@ function getNodosCercanos() {
       "__prefix":"soap"
    }
 }
-
     */
 
     /*
@@ -2045,30 +2038,41 @@ function getNodosCercanos() {
         longitude: -5.9823
       }
     };
-
-    var dictionary = {
-      'LATITUDE' : pos.coords.latitude,
-      'LONGITUDE': pos.coords.longitude
-    };
-
-    Pebble.sendAppMessage(dictionary,
-    function(e) {
-      console.log('You are latitude -> ' + dictionary.LATITUDE + " longitude ->" + dictionary.LONGITUDE);
-    },
-    function(e) {
-      console.log('Error sending info to Pebble!');
-    });
   }
 
   var options = {
     enableHighAccuracy: true,
-    maximumAge: 10000,
-    timeout: 10000
+    maximumAge        : 10000,
+    timeout           : 10000
   };
 
   navigator.geolocation.getCurrentPosition(success, error, options);
 }
 
+function getTiempoNodo(idParada) {
+  idParada = idParada || 18;
+  var soapBody = '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" targetNamespace="http://impl.services.infotusws.tussam.com/" xmlns:ns1="http://services.infotusws.tussam.com/" xmlns:ns2="http://schemas.xmlsoap.org/soap/http" ><soap:Body><getTiemposNodo xmlns="http://services.infotusws.tussam.com/"><codigo xmlns="">' + idParada + '</codigo></getTiemposNodo></soap:Body></soap:Envelope>';
+
+  var method = 'POST';
+  // Create the request
+  var req = new XMLHttpRequest();
+  req.open(method, TUSSAM_URL, true);
+
+  req.setRequestHeader("Authorization", "Basic aW5mb3R1cy11c2VybW9iaWxlOjJpbmZvdHVzMHVzZXIxbW9iaWxlMg==");
+  req.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
+  req.setRequestHeader("SOAPAction", "");
+  req.setRequestHeader("deviceid", Pebble.getAccountToken());
+  req.send(soapBody);
+
+  req.onload = function() {
+    var xmlText = this.responseText;
+    var jsonObj = x2js.xml_str2json( xmlText );
+    console.log(JSON.stringify(jsonObj));
+  };
+}
+
+
 module.exports = {
-  getNodosCercanos : getNodosCercanos
+  getNodosCercanos : getNodosCercanos,
+  getTiempoNodo    : getTiempoNodo
 };
